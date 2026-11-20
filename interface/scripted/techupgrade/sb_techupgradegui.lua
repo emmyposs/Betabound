@@ -197,6 +197,8 @@ end
 function sb_showSuits()
   if sb_hooked then
     self.selectedSlot = "sb_suit"
+    --manually toggle previous slot's radio button
+    widget.setChecked("techSlotGroup." .. widget.getSelectedOption("techSlotGroup"), false)
     sb_updateSuitImage()
     populateTechList("sb_suit")
     widget.setText("lblDescription", sb_selectTechDescription)
