@@ -100,6 +100,7 @@ function setSelectedTech(techName)
       widget.setButtonEnabled("btnEnable", false)
     end
   end
+  sb_toggleButtons()
 end
 
 function animateSelection(dt)
@@ -178,7 +179,6 @@ end
 
 function equipTech(tech)
   if self.selectedSlot ~= "sb_suit" then originalEquipTech(tech) end
-  sb_toggleButtons()
 end
 
 function sb_unequip()
@@ -273,13 +273,12 @@ function pat_remove()
 end
 
 function sb_toggleButtons()
-  local tech = self.selectedTech and (self.selectedSlot ~= "sb_suit" and player.equippedTech(self.selectedSlot) or self.selectedSlot == "sb_suit" and sb_suit) or false
-  --yknow what fuck it it doesnt matter if the unequip/download buttons are visible for locked techs. they cant even download it. i tried string.find-ing "--" in the cost amount text but it didnt work for some reason
-  --hi hello yes this is me from the future you need to %-%- ahahahaha that's also why the food rot bar detection didnt work
-  --TODO: replace `tech and true or false` with `?:find("%-%-")`
-  widget.setButtonEnabled("sb_unequip", tech and true or false)
-  widget.setButtonEnabled("sb_download", tech and true or false)
-  widget.setButtonEnabled("sb_bind", tech and true or false)
+  local equipped = self.selectedSlot ~= "sb_suit" and player.equippedTech(self.selectedSlot) or self.selectedSlot == "sb_suit" and sb_suit
+  widget.setButtonEnabled("sb_unequip", equipped)
+
+  local unlocked = self.selectedTech and contains(player.enabledTechs(), self.selectedTech)
+  widget.setButtonEnabled("sb_download", unlocked)
+  widget.setButtonEnabled("sb_bind", unlocked)
 end
 
 function sb_prepareSuits()
