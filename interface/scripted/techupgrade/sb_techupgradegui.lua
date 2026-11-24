@@ -182,12 +182,20 @@ function equipTech(tech)
 end
 
 function sb_unequip()
+  local unequipped
   if self.selectedSlot == "sb_suit" then
     world.sendEntityMessage(player.id(), "sb_suitTech:equip")
+    unequipped = sb_suit
     sb_suit = nil
   else
     local tech = player.equippedTech(self.selectedSlot)
     if tech then player.unequipTech(tech) end
+    unequipped = tech
+  end
+  local selection = widget.getListSelected(self.techList)
+  if unequipped and unequipped == widget.getData(self.techList .. '.' .. selection) then
+    --deselect unequipped tech
+    populateTechList(self.selectedSlot)
   end
   updateEquippedIcons()
   sb_updateSuitImage()
